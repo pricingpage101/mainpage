@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENIUS ACADEMY</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: #eee;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 2rem;
+            margin: 1rem 0;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            max-width: 800px;
+            width: 90%;
+        }
+
+        .cta-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-text {
+            color: #eee;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .fixed-buttons {
+            position: fixed;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .fixed-button {
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .pro-button {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: black;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .donate-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .fixed-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .subjects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            width: 90%;
+        }
+
+        .subject-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card::before {
+            content: 'Select Course →';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(100%);
+            transition: transform 0.3s;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .subject-card:hover::before {
+            transform: translateY(0);
+        }
+
+        .subject-card a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .popup-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .popup-text {
+            margin-bottom: 20px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .popup-button {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            transition: transform 0.3s;
+        }
+
+        .popup-button:hover {
+            transform: scale(1.05);
+        }
+
+        .popup-close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .telegram-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .subjects-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+
+            .cta-title {
+                font-size: 1.5rem;
+            }
+
+            .fixed-buttons {
+                bottom: 20px;
+                top: auto;
+                right: 50%;
+                transform: translateX(50%);
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>GENIUS ACADEMY</h1>
+        <p class="subtitle">Unlock Your Potential - Choose Your Path to Excellence</p>
+    </header>
+
+    <div class="cta-section pulse-animation">
+        <h2 class="cta-title">Transform Your Future Today!</h2>
+        <p class="cta-text">
+            Ready to embark on your learning journey? Choose from our expertly crafted courses below. 
+            Each subject is designed to provide you with comprehensive knowledge and practical skills. 
+            Select your preferred discipline and take the first step towards academic excellence!
+        </p>
+    </div>
+
+    <div class="fixed-buttons">
+        <a href="https://example.com/pro-upgrade" class="fixed-button pro-button">UPGRADE TO PRO</a>
+        <a href="https://example.com/donate" class="fixed-button donate-button">DONATE HERE</a>
+    </div>
+
+    <div class="subjects-container">
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('mathematics')">Mathematics</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('english')">English Language</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('physics')">Physics</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('chemistry')">Chemistry</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('biology')">Biology</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('engineering')">Engineering</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('nursing')">Nursing</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('economics')">Economics</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('accountancy')">Accountancy</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('computer-science')">Computer Science</a>
+        </div>
+        <div class="subject-card">
+            <a href="#" onclick="redirectTo('law-studies')">Law Studies</a>
+        </div>
+    </div>
+
+    <!-- Donation Popup -->
+    <div id="donatePopup" class="popup">
+        <span class="popup-close" onclick="closePopup('donatePopup')">&times;</span>
+        <h3 class="popup-title">Support Our Mission!</h3>
+        <p class="popup-text">
+            Your donation helps us provide quality education to students worldwide. 
+            Every contribution makes a difference in shaping the future of learning.
+        </p>
+        <a href="https://example.com/donate" class="popup-button">CLICK HERE TO DONATE</a>
+    </div>
+
+    <!-- Telegram Popup -->
+    <div id="telegramPopup" class="popup">
+        <span class="popup-close" onclick="closePopup('telegramPopup')">&times;</span>
+        <img src="/api/placeholder/60/60" alt="Telegram Logo" class="telegram-logo">
+        <h3 class="popup-title">Join Our Telegram Community!</h3>
+        <p class="popup-text">
+            Get instant updates, study materials, and connect with fellow learners. 
+            Join our vibrant educational community on Telegram!
+        </p>
+        <a href="https://t.me/geniusacademy" class="popup-button">CLICK HERE TO JOIN</a>
+    </div>
+
+    <div id="popupOverlay" class="popup-overlay"></div>
+
+    <script>
+        function redirectTo(subject) {
+            const subjectURLs = {
+                'mathematics': 'https://example.com/mathematics',
+                'english': 'https://example.com/english',
+                'physics': 'https://example.com/physics',
+                'chemistry': 'https://example.com/chemistry',
+                'biology': 'https://example.com/biology',
+                'engineering': 'https://example.com/engineering',
+                'nursing': 'https://example.com/nursing',
+                'economics': 'https://example.com/economics',
+                'accountancy': 'https://example.com/accountancy',
+                'computer-science': 'https://example.com/computer-science',
+                'law-studies': 'https://example.com/law-studies'
+            };
+
+            alert(`Redirecting to ${subject.replace('-', ' ')} course page...`);
+            // window.location.href = subjectURLs[subject];
+        }
+
+        function showPopup(popupId) {
+            document.querySelectorAll('.popup').forEach(popup => {
+                popup.style.display = 'none';
+            });
+            document.getElementById(popupId).style.display = 'block';
+            document.getElementById('popupOverlay').style.display = 'block';
+        }
+
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+            document.getElementById('popupOverlay').style.display = 'none';
+        }
+
+        function initializePopups() {
+            // Donation popup: First appears after 45 seconds, then every 3 minutes
+            setTimeout(() => {
+                showPopup('donatePopup');
+                setInterval(() => {
+                    showPopup('donatePopup');
+                }, 180000); // 3 minutes
+            }, 45000); // 45 seconds initial delay
+
+            // Telegram popup: First appears after 90 seconds, then every 4 minutes
+            setTimeout(() => {
+                showPopup('telegramPopup');
+                setInterval(() => {
+                    showPopup('telegramPopup');
+                }, 240000); // 4 minutes
+            }, 90000); // 90 seconds initial delay
+        }
+
+        window.addEventListener('load', initializePopups);
+
+        document.getElementById('popupOverlay').addEventListener('click', () => {
+            document.querySelectorAll('.popup').forEach(popup => {
+                popup.style.display = 'none';
+            });
+            document.getElementById('popupOverlay').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
