@@ -374,23 +374,36 @@
             document.getElementById('popupOverlay').style.display = 'none';
         }
 
-        function initializePopups() {
-            // Donation popup: First appears after 45 seconds, then every 3 minutes
-            setTimeout(() => {
-                showPopup('donatePopup');
-                setInterval(() => {
-                    showPopup('donatePopup');
-                }, 180000); // 3 minutes
-            }, 45000); // 45 seconds initial delay
+       function initializePopups() {
+    let isPopupActive = false; // Track if a popup is currently open
 
-            // Telegram popup: First appears after 90 seconds, then every 4 minutes
+    function showControlledPopup(popupId) {
+        if (!isPopupActive) {
+            isPopupActive = true;
+            showPopup(popupId);
             setTimeout(() => {
-                showPopup('telegramPopup');
-                setInterval(() => {
-                    showPopup('telegramPopup');
-                }, 240000); // 4 minutes
-            }, 90000); // 90 seconds initial delay
+                isPopupActive = false;
+            }, 5000); // Allow a 5-second gap before another popup can appear
         }
+    }
+
+    // Donation popup: First appears after 30 seconds, then every 50 seconds
+    setTimeout(() => {
+        showControlledPopup('donatePopup');
+        setInterval(() => {
+            showControlledPopup('donatePopup');
+        }, 50000); // 50 seconds interval
+    }, 30000); // 30 seconds initial delay
+
+    // Telegram popup: First appears after 45 seconds, then every 55 seconds
+    setTimeout(() => {
+        showControlledPopup('telegramPopup');
+        setInterval(() => {
+            showControlledPopup('telegramPopup');
+        }, 55000); // 55 seconds interval
+    }, 45000); // 45 seconds initial delay
+}
+
 
         window.addEventListener('load', initializePopups);
 
