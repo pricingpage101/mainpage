@@ -237,6 +237,23 @@
             margin-bottom: 15px;
         }
 
+        /* Coming soon popup */
+        #comingSoonPopup {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .subjects-container {
                 grid-template-columns: 1fr;
@@ -282,37 +299,37 @@
    
     <div class="subjects-container">
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('mathematics')">Mathematics</a>
+            <a href="#" onclick="handleSubjectClick('mathematics')">Mathematics</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('english')">English Language</a>
+            <a href="#" onclick="handleSubjectClick('english')">English Language</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('physics')">Physics</a>
+            <a href="#" onclick="handleSubjectClick('physics')">Physics</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('chemistry')">Chemistry</a>
+            <a href="#" onclick="handleSubjectClick('chemistry')">Chemistry</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('biology')">Biology</a>
+            <a href="#" onclick="handleSubjectClick('biology')">Biology</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('engineering')">Engineering</a>
+            <a href="#" onclick="handleSubjectClick('engineering')">Engineering</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('nursing')">Nursing</a>
+            <a href="#" onclick="handleSubjectClick('nursing')">Nursing</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('economics')">Economics</a>
+            <a href="#" onclick="handleSubjectClick('economics')">Economics</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('accountancy')">Accountancy</a>
+            <a href="#" onclick="handleSubjectClick('accountancy')">Accountancy</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('computer-science')">Computer Science</a>
+            <a href="#" onclick="handleSubjectClick('computer-science')">Computer Science</a>
         </div>
         <div class="subject-card">
-            <a href="#" onclick="redirectTo('law-studies')">Law Studies</a>
+            <a href="#" onclick="handleSubjectClick('law-studies')">Law Studies</a>
         </div>
     </div>
 
@@ -339,26 +356,35 @@
         <a href="https://t.me/geniusacademy" class="popup-button">CLICK HERE TO JOIN</a>
     </div>
 
+    <!-- Coming Soon Popup -->
+    <div id="comingSoonPopup" class="popup">
+        <span class="popup-close" onclick="closePopup('comingSoonPopup')">&times;</span>
+        <h3 class="popup-title">Coming Soon!</h3>
+        <p class="popup-text">
+            This course is currently under development. Our team of experts is working hard to create high-quality content for you.
+            Please check back later or join our Telegram community for updates!
+        </p>
+        <a href="#" onclick="closePopup('comingSoonPopup')" class="popup-button">OK, GOT IT</a>
+    </div>
+
     <div id="popupOverlay" class="popup-overlay"></div>
 
     <script>
-        function redirectTo(subject) {
-            const subjectURLs = {
-                'mathematics': 'https://example.com/mathematics',
-                'english': 'https://example.com/english',
-                'physics': 'https://example.com/physics',
-                'chemistry': 'https://example.com/chemistry',
-                'biology': 'https://example.com/biology',
-                'engineering': 'https://example.com/engineering',
-                'nursing': 'https://example.com/nursing',
-                'economics': 'https://example.com/economics',
-                'accountancy': 'https://example.com/accountancy',
-                'computer-science': 'https://example.com/computer-science',
-                'law-studies': 'https://example.com/law-studies'
-            };
+        // Define the redirect URLs for mathematics and engineering
+        const redirectSubjects = {
+            'mathematics': 'https://example.com/mathematics',
+            'engineering': 'https://example.com/engineering'
+        };
 
-            alert(`Redirecting to ${subject.replace('-', ' ')} course page...`);
-            // window.location.href = subjectURLs[subject];
+        function handleSubjectClick(subject) {
+            // Check if the subject should redirect
+            if (subject === 'mathematics' || subject === 'engineering') {
+                // For mathematics and engineering, redirect immediately
+                window.location.href = redirectSubjects[subject];
+            } else {
+                // For all other subjects, show the "Coming Soon" popup
+                showPopup('comingSoonPopup');
+            }
         }
 
         function showPopup(popupId) {
@@ -374,36 +400,35 @@
             document.getElementById('popupOverlay').style.display = 'none';
         }
 
-       function initializePopups() {
-    let isPopupActive = false; // Track if a popup is currently open
+        function initializePopups() {
+            let isPopupActive = false; // Track if a popup is currently open
 
-    function showControlledPopup(popupId) {
-        if (!isPopupActive) {
-            isPopupActive = true;
-            showPopup(popupId);
+            function showControlledPopup(popupId) {
+                if (!isPopupActive) {
+                    isPopupActive = true;
+                    showPopup(popupId);
+                    setTimeout(() => {
+                        isPopupActive = false;
+                    }, 5000); // Allow a 5-second gap before another popup can appear
+                }
+            }
+
+            // Donation popup: First appears after 30 seconds, then every 50 seconds
             setTimeout(() => {
-                isPopupActive = false;
-            }, 5000); // Allow a 5-second gap before another popup can appear
+                showControlledPopup('donatePopup');
+                setInterval(() => {
+                    showControlledPopup('donatePopup');
+                }, 30000); // 30 seconds interval
+            }, 10000); // 10 seconds initial delay
+
+            // Telegram popup: First appears after 45 seconds, then every 55 seconds
+            setTimeout(() => {
+                showControlledPopup('telegramPopup');
+                setInterval(() => {
+                    showControlledPopup('telegramPopup');
+                }, 45000); // 45 seconds interval
+            }, 25000); // 25 seconds initial delay
         }
-    }
-
-    // Donation popup: First appears after 30 seconds, then every 50 seconds
-    setTimeout(() => {
-        showControlledPopup('donatePopup');
-        setInterval(() => {
-            showControlledPopup('donatePopup');
-        }, 30000); // 50 seconds interval
-    }, 10000); // 30 seconds initial delay
-
-    // Telegram popup: First appears after 45 seconds, then every 55 seconds
-    setTimeout(() => {
-        showControlledPopup('telegramPopup');
-        setInterval(() => {
-            showControlledPopup('telegramPopup');
-        }, 45000); // 55 seconds interval
-    }, 25000); // 45 seconds initial delay
-}
-
 
         window.addEventListener('load', initializePopups);
 
